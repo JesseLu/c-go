@@ -90,6 +90,8 @@ for k = 1 : max_iters
             var = var1; 
             if (ss_ind(k) >= 2) % Increase the next iteration's step size.
                 ss_ind(k+1) = ss_ind(k) - 1;
+            else
+                ss_ind(k+1) = ss_ind(k);
             end
             break % Move on to next iteration.
 
