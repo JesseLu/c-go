@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\be}{\begin{equation}}
+\newcommand{\ee}{\end{equation}}
+\newcommand{\grad}{\nabla}
+
+\title{Theory for Constrained Gradient Optimization}
+\author{Jesse Lu, \texttt{jesselu@stanford.edu}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+
+\section{Unconstrained gradient optimization}
+Suppose we have an \emph{objective function}, $f: \C^n \to \R$, whose value we would like to decrease. 
+The most naive and straightforward approach would be to first form a linear approximation to $f$ at $x_0$,
+\be f(x) \approx f(x_0) + \text{Re}\{g(x_0)^*(x - x_0)\} \ee
+where $g: \C^{n \times 1} $ is the \emph{gradient},
+\be g(x) = \grad_x f(x). \ee
+The optimal point $x_\text{opt}$ of the linearized function is
+\be x = x_0 - ag(x_0) \ee
+where $a$ is a positive, scalar step-size.
+
+Of course, when we want to optimize the actual objective function $f(x)$, we will have to limit $a$ since our linear approximation will break down as we leave the vicinity of $x_0$.
+Optimizing $f(x)$ by taking steps in the opposite direction of its gradient is commonly referred to as a \emph{gradient-descent} algorithm.
+
+\section{Constrained gradient optimization}
+For many practical problems, we would like to put a constraint on the permissible values of $x$. 
+A simple constraint may have the form
+\be Ax = b. \ee
+In this case, we must modify the descent direction so that the constraint is satisfied. 
+In all cases, we assume that $x_0$ already satisfies the constraint, and so we only need to ensure that our step $\Delta x = x - x_0$ satisfies it as well.
+
+This is accomplished by ensuring that 
+\be A \Delta x = 0, \ee
+which is satisfied if we simply project $-g(x_0)$ onto the null-space of $A$. 
+We do so in the following manner
+\be \Delta x = -Pg(x_0), \ee
+where $P = I - A(A^*A)^{-1}A^*$ is the projector onto the null-space of $A$.
+
+For constraints involving non-linear functions or inequalities there may not be a unique way to project $\Delta x$ back into allowable range of values. 
+A heuristic will then be required.
+Additionally, it may not be obvious \emph{which} allowed value it should be projected to, although the one with the minimum distance, $\|\Delta x - \Delta x_\text{allowed}\|$ is an intuitive choice.
+
+\end{document}
